@@ -2,6 +2,10 @@
 
 > Don't disturb my circle!
 
+![GitHub License](https://img.shields.io/github/license/misaka10987/archimedes)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/misaka10987/archimedes/lean_action_ci.yml)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/misaka10987/archimedes)
+
 *Archimedes* is a mathematics library specifically for Euclidean geometry in a 3-dimensional Euclidean space. It provides intuitive, non-abstract definitions of geometrical concepts while trying to maximize interoperability with [Mathlib](https://github.com/leanprover-community/mathlib4).
 
 ## Install
