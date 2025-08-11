@@ -38,7 +38,7 @@ Archimedes tries to offer a solution for that. By limiting its range of applicat
 
 - batteries-included definitions
 
-- based on vector space $\R^n$ instead of Euclid's postulates
+- based on vector space $\mathbb R^n$ instead of Euclid's postulates
 
 - interoperable with Mathlib via `EuclideanSpace ℝ (Fin 3)` 
 
