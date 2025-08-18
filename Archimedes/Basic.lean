@@ -31,7 +31,7 @@ infix:69 "⬝" => inner ℝ
 Naive definition of dot product of 3-dimensional vectors,
 i.e. sum of product of corresponding components.
 -/
-theorem inner (v w : Point) : v ⬝ w = v 0 • w 0 + v 1 • w 1 + v 2 • w 2 := by
+theorem dot (v w : Point) : v ⬝ w = v 0 • w 0 + v 1 • w 1 + v 2 • w 2 := by
   simp [Inner.inner, Fin.sum_univ_succ]
   ring
 
@@ -57,10 +57,22 @@ theorem norm (v : Point) : ‖v‖ = √ (v 0 ^ 2 + v 1 ^ 2 + v 2 ^ 2) := by
   ring_nf
 
 /--
+Square of normal of a vector, or sum of square of components, is non-negative.
+-/
+theorem sq_norm_nn (v : Point) : 0 ≤ v 0 ^ 2 + v 1 ^ 2 + v 2 ^ 2 := by
+  repeat first | apply add_nonneg | apply sq_nonneg
+
+/--
+Square of normal of a vector equals to the sum of square of components.
+-/
+theorem sq_norm (v : Point) : ‖v‖ ^ 2 = v 0 ^ 2 + v 1 ^ 2 + v 2 ^ 2 := by
+  simp [norm, Real.sq_sqrt (sq_norm_nn v)]
+
+/--
 A vector dot products itself equals square of its normal.
 -/
 theorem sq_norm_eq_dot_self (v : Point) : ‖v‖ ^ 2 = v ⬝ v := by
-  simp [inner, norm, pow_two]
+  simp [dot, norm, pow_two]
   rw [←Real.sqrt_mul, Real.sqrt_mul_self]
   repeat first | apply add_nonneg | apply mul_self_nonneg
 
@@ -70,6 +82,9 @@ The origin point, or $(0,0,0)$.
 -/
 abbrev o : Point := 0
 
+/--
+The origin is zero vector.
+-/
 @[simp]
 lemma zeros_eq_origin : ![0, 0, 0] = o := by simp
 
@@ -88,5 +103,38 @@ abbrev y : Point := ![0, 1, 0]
 The unit vector on $z$ axis.
 -/
 abbrev z : Point := ![0, 0, 1]
+
+
+/--
+Unit vector of a specific vector.
+Defined as `x`, or $(1, 0, 0)$ for zero vector.
+-/
+noncomputable def unit (v : Point) : Point :=
+  if ‖v‖ = 0 then x else (1 / ‖v‖) • v
+
+
+/--
+The normal of a unit vector always equals to $1$.
+-/
+@[simp]
+lemma norm_unit_is_one (v : Point) : ‖unit v‖ = 1 := by
+  simp [unit]
+  by_cases h: v = 0
+  · simp [h, norm]
+  · simp [h, norm_smul]
+
+/--
+A vector dot products its unit vector equals its normal.
+-/
+theorem dot_unit_eq_norm (v : Point) : v ⬝ unit v = ‖v‖ := by
+  simp [unit, dot]
+  by_cases h : v = 0
+  · simp [h]
+  · simp [h]
+    have : ‖v‖ ≠ 0 := fun hh ↦ h (norm_eq_zero.mp hh)
+    field_simp
+    simp [norm]
+    ring_nf
+    simp [Real.sq_sqrt (sq_norm_nn v)]
 
 end A
