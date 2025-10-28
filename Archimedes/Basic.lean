@@ -18,19 +18,16 @@ namespace Point
 /--
 The x-component of the vector, defined as `self 0` .
 -/
-@[simp]
 abbrev x (self : Point) : ℝ := self 0
 
 /--
 The y-component of the vector, defined as `self 1` .
 -/
-@[simp]
 abbrev y (self : Point) : ℝ := self 1
 
 /--
 The z-component of the vector, defined as `self 2` .
 -/
-@[simp]
 abbrev z (self : Point) : ℝ := self 2
 
 /--
@@ -78,12 +75,12 @@ A vector's inner product with itself $\left< \mathbf v, \mathbf v \right>$ is no
 -/
 theorem dot_self_nn (v : Point) : 0 ≤ v ∘ v := by
   simp [inner_product]
-  repeat first | apply add_nonneg | apply mul_self_nonneg
+  nlinarith
 
 /--
 The length, or norm of the vector.
 -/
-noncomputable abbrev len (self : Point) : ℝ := ‖self‖
+noncomputable abbrev len (v : Point) : ℝ := ‖v‖
 
 /--
 Naive definition of norm of 3-dimensional vector,
@@ -96,31 +93,18 @@ theorem norm (v : Point) : ‖v‖ = √ (v.x ^ 2 + v.y ^ 2 + v.z ^ 2) := by
 /--
 The length, or norm of the vector is non-negative.
 -/
-theorem len_nn (self : Point) : 0 ≤ ‖self‖ := by
+theorem len_nn (v : Point) : 0 ≤ ‖v‖ := by
   simp [norm]
-
-end Point
-
-/--
-Square of normal of a vector, or sum of square of components, is non-negative.
--/
-theorem sq_norm_nn (v : Point) : 0 ≤ v.x ^ 2 + v.y ^ 2 + v.z ^ 2 := by
-  repeat first | apply add_nonneg | apply sq_nonneg
-
-/--
-Square of normal of a vector equals to the sum of square of components.
--/
-theorem sq_norm (v : Point) : ‖v‖ ^ 2 = v.x ^ 2 + v.y ^ 2 + v.z ^ 2 := by
-  simp [Point.norm, Real.sq_sqrt (sq_norm_nn v)]
 
 /--
 A vector dot products itself equals square of its normal.
 -/
 theorem sq_norm_eq_dot_self (v : Point) : ‖v‖ ^ 2 = v ∘ v := by
-  simp [Point.inner_product, Point.norm, pow_two]
-  rw [←Real.sqrt_mul, Real.sqrt_mul_self]
-  repeat first | apply add_nonneg | apply mul_self_nonneg
+  simp [norm, inner_product, ←pow_two]
+  rw [Real.sq_sqrt]
+  positivity
 
+end Point
 
 /--
 The origin point, or $(0, 0, 0)$.
@@ -132,7 +116,6 @@ The origin is zero vector.
 -/
 @[simp]
 lemma zeros_eq_origin : ![0, 0, 0] = o := by simp
-
 
 /--
 The unit vector on $x$ axis.
@@ -180,6 +163,7 @@ theorem dot_unit_eq_norm (v : Point) : v ∘ unit v = ‖v‖ := by
     field_simp
     simp [Point.norm]
     ring_nf
-    simp [Real.sq_sqrt (sq_norm_nn v)]
+    rw [Real.sq_sqrt]
+    positivity
 
 end A
