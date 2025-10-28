@@ -104,6 +104,32 @@ theorem sq_norm_eq_dot_self (v : Point) : ‖v‖ ^ 2 = v ∘ v := by
   rw [Real.sq_sqrt]
   positivity
 
+/--
+The unit vector of a specific vector.
+Note that this is undefined for zero vector.
+-/
+noncomputable def unit (self : Point) : Point :=
+  (1 / ‖self‖) • self
+
+/--
+The norm of a unit vector, if defined, is $1$ .
+-/
+@[simp]
+theorem unit_norm_one (v : Point) (nonzero : v ≠ 0) : ‖v.unit‖ = 1 := by
+  simp [unit, norm_smul]
+  field_simp
+
+/--
+A vector's length equals dot product with its unit vector.
+-/
+theorem len_dot_unit (v : Point) (nonzero : v ≠ 0) : ‖v‖ = v ∘ v.unit := by
+  simp [unit, norm, inner_product]
+  have : ‖v‖ ≠ 0 := fun h ↦ nonzero (norm_eq_zero.mp h)
+  rw [norm] at this
+  field_simp
+  rw [Real.sq_sqrt]
+  positivity
+
 end Point
 
 /--
@@ -131,39 +157,5 @@ abbrev y : Point := ![0, 1, 0]
 The unit vector on $z$ axis.
 -/
 abbrev z : Point := ![0, 0, 1]
-
-
-/--
-Unit vector of a specific vector.
-Defined as `x`, or $(1, 0, 0)$ for zero vector.
--/
-noncomputable def unit (v : Point) : Point :=
-  if ‖v‖ = 0 then x else (1 / ‖v‖) • v
-
-
-/--
-The normal of a unit vector always equals to $1$.
--/
-@[simp]
-lemma norm_unit_is_one (v : Point) : ‖unit v‖ = 1 := by
-  simp [unit]
-  by_cases h: v = 0
-  · simp [h, Point.norm]
-  · simp [h, norm_smul]
-
-/--
-A vector dot products its unit vector equals its normal.
--/
-theorem dot_unit_eq_norm (v : Point) : v ∘ unit v = ‖v‖ := by
-  simp [unit, Point.inner_product]
-  by_cases h : v = 0
-  · simp [h]
-  · simp [h]
-    have : ‖v‖ ≠ 0 := fun hh ↦ h (norm_eq_zero.mp hh)
-    field_simp
-    simp [Point.norm]
-    ring_nf
-    rw [Real.sq_sqrt]
-    positivity
 
 end A
