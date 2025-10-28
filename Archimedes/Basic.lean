@@ -73,6 +73,13 @@ theorem vector_product (v w : Point)
 := by
   simp [crossProduct]
 
+/--
+A vector's inner product with itself $\left< \mathbf v, \mathbf v \right>$ is non-negative.
+-/
+theorem dot_self_nn (v : Point) : 0 ≤ v ∘ v := by
+  simp [inner_product]
+  repeat first | apply add_nonneg | apply mul_self_nonneg
+
 end Point
 
 /--
