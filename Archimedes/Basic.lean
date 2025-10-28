@@ -80,15 +80,26 @@ theorem dot_self_nn (v : Point) : 0 ≤ v ∘ v := by
   simp [inner_product]
   repeat first | apply add_nonneg | apply mul_self_nonneg
 
-end Point
+/--
+The length, or norm of the vector.
+-/
+noncomputable abbrev len (self : Point) : ℝ := ‖self‖
 
 /--
-Naive definition of normal of 3-dimensional vector,
+Naive definition of norm of 3-dimensional vector,
 i.e. square root of sum of components squared.
 -/
 theorem norm (v : Point) : ‖v‖ = √ (v.x ^ 2 + v.y ^ 2 + v.z ^ 2) := by
   simp [Norm.norm, Fin.sum_univ_succ, Real.sqrt_eq_rpow]
   ring_nf
+
+/--
+The length, or norm of the vector is non-negative.
+-/
+theorem len_nn (self : Point) : 0 ≤ ‖self‖ := by
+  simp [norm]
+
+end Point
 
 /--
 Square of normal of a vector, or sum of square of components, is non-negative.
@@ -100,13 +111,13 @@ theorem sq_norm_nn (v : Point) : 0 ≤ v.x ^ 2 + v.y ^ 2 + v.z ^ 2 := by
 Square of normal of a vector equals to the sum of square of components.
 -/
 theorem sq_norm (v : Point) : ‖v‖ ^ 2 = v.x ^ 2 + v.y ^ 2 + v.z ^ 2 := by
-  simp [norm, Real.sq_sqrt (sq_norm_nn v)]
+  simp [Point.norm, Real.sq_sqrt (sq_norm_nn v)]
 
 /--
 A vector dot products itself equals square of its normal.
 -/
 theorem sq_norm_eq_dot_self (v : Point) : ‖v‖ ^ 2 = v ∘ v := by
-  simp [Point.inner_product, norm, pow_two]
+  simp [Point.inner_product, Point.norm, pow_two]
   rw [←Real.sqrt_mul, Real.sqrt_mul_self]
   repeat first | apply add_nonneg | apply mul_self_nonneg
 
@@ -154,7 +165,7 @@ The normal of a unit vector always equals to $1$.
 lemma norm_unit_is_one (v : Point) : ‖unit v‖ = 1 := by
   simp [unit]
   by_cases h: v = 0
-  · simp [h, norm]
+  · simp [h, Point.norm]
   · simp [h, norm_smul]
 
 /--
@@ -167,7 +178,7 @@ theorem dot_unit_eq_norm (v : Point) : v ∘ unit v = ‖v‖ := by
   · simp [h]
     have : ‖v‖ ≠ 0 := fun hh ↦ h (norm_eq_zero.mp hh)
     field_simp
-    simp [norm]
+    simp [Point.norm]
     ring_nf
     simp [Real.sq_sqrt (sq_norm_nn v)]
 
