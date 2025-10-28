@@ -43,7 +43,7 @@ noncomputable abbrev dot (self : Point) (v : Point) : ℝ :=
 /--
 The dot product.
 -/
-infix:69 "⬝" => dot
+infix:69 "∘" => dot
 
 /--
 The cross product.
@@ -57,13 +57,11 @@ The cross product.
 -/
 infix:69 "⨯" => cross
 
-end Point
-
 /--
 Naive definition of dot product of 3-dimensional vectors,
 i.e. sum of product of corresponding components.
 -/
-theorem inner_product (v w : Point) : v ⬝ w = v.x • w.x + v.y • w.y + v.z • w.z := by
+theorem inner_product (v w : Point) : v ∘ w = v.x • w.x + v.y • w.y + v.z • w.z := by
   simp [Inner.inner, Fin.sum_univ_succ]
   ring
 
@@ -75,6 +73,7 @@ theorem vector_product (v w : Point)
 := by
   simp [crossProduct]
 
+end Point
 
 /--
 Naive definition of normal of 3-dimensional vector,
@@ -99,8 +98,8 @@ theorem sq_norm (v : Point) : ‖v‖ ^ 2 = v.x ^ 2 + v.y ^ 2 + v.z ^ 2 := by
 /--
 A vector dot products itself equals square of its normal.
 -/
-theorem sq_norm_eq_dot_self (v : Point) : ‖v‖ ^ 2 = v ⬝ v := by
-  simp [inner_product, norm, pow_two]
+theorem sq_norm_eq_dot_self (v : Point) : ‖v‖ ^ 2 = v ∘ v := by
+  simp [Point.inner_product, norm, pow_two]
   rw [←Real.sqrt_mul, Real.sqrt_mul_self]
   repeat first | apply add_nonneg | apply mul_self_nonneg
 
@@ -154,8 +153,8 @@ lemma norm_unit_is_one (v : Point) : ‖unit v‖ = 1 := by
 /--
 A vector dot products its unit vector equals its normal.
 -/
-theorem dot_unit_eq_norm (v : Point) : v ⬝ unit v = ‖v‖ := by
-  simp [unit, inner_product]
+theorem dot_unit_eq_norm (v : Point) : v ∘ unit v = ‖v‖ := by
+  simp [unit, Point.inner_product]
   by_cases h : v = 0
   · simp [h]
   · simp [h]
