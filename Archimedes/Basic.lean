@@ -175,15 +175,10 @@ theorem collinear (v w : Point) : v ∥ w ↔ v = 0 ∨ ∃ k : ℝ, w = k • v
 end Point
 
 /--
-The origin point, or $(0, 0, 0)$.
--/
-abbrev o : Point := 0
-
-/--
-The origin is zero vector.
+A vector with all-zero components is a zero vector.
 -/
 @[simp]
-lemma zeros_eq_origin : ![0, 0, 0] = o := by simp
+lemma zero_components : ![0, 0, 0] = 0 := by simp
 
 /--
 The unit vector on $x$ axis.
