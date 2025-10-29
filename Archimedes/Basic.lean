@@ -41,7 +41,7 @@ noncomputable abbrev dot (self : Point) (v : Point) : ℝ :=
 /--
 The dot product.
 -/
-infix:69 "∘" => dot
+infix:69 " ∘ " => dot
 
 /--
 The cross product.
@@ -53,7 +53,7 @@ abbrev cross (self : Point) (v : Point) : Point :=
 /--
 The cross product.
 -/
-infix:69 "⨯" => cross
+infix:69 " ⨯ " => cross
 
 /--
 Naive definition of dot product of 3-dimensional vectors,
@@ -140,7 +140,7 @@ def parallel (self : Point) (v : Point) : Prop :=
 /--
 The parallel relation.
 -/
-infix:49 "∥" => parallel
+infix:49 " ∥ " => parallel
 
 /--
 Naive definition for parallel vectors, i.e. one is a multiple of another.
