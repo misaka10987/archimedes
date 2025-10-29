@@ -1,5 +1,6 @@
 import Mathlib.Analysis.InnerProductSpace.PiL2
 import Mathlib.LinearAlgebra.CrossProduct
+import Mathlib.LinearAlgebra.AffineSpace.FiniteDimensional
 
 
 namespace A
@@ -129,6 +130,47 @@ theorem len_dot_unit (v : Point) (nonzero : v ≠ 0) : ‖v‖ = v ∘ v.unit :=
   field_simp
   rw [Real.sq_sqrt]
   positivity
+
+/--
+The parallel relation.
+-/
+def parallel (self : Point) (v : Point) : Prop :=
+  Collinear ℝ {0, self, v}
+
+/--
+The parallel relation.
+-/
+infix:49 "∥" => parallel
+
+/--
+Naive definition for parallel vectors, i.e. one is a multiple of another.
+-/
+theorem collinear (v w : Point) : v ∥ w ↔ v = 0 ∨ ∃ k : ℝ, w = k • v := by
+  by_cases h : v = 0
+  · exact ⟨ fun _ ↦ Or.inl h, by simp [parallel, h]; apply collinear_pair ⟩
+  · simp [parallel, h, collinear_iff_exists_forall_eq_smul_vadd]
+    constructor
+    · intro ⟨ p₀, x, ⟨ r_0, h_0 ⟩, ⟨ r_v, h_v ⟩, ⟨ r_w, h_w ⟩ ⟩
+      let k := (r_w - r_0) / (r_v - r_0)
+      have : w = k • v := by
+        simp [k, h_v, h_w]
+        have h_nz : r_v - r_0 ≠ 0 := by
+          by_contra
+          have : r_v = r_0 := by linarith
+          rw [this, ←h_0] at h_v
+          contradiction
+        rw [←smul_add, ←smul_right_inj h_nz, smul_smul, ←mul_div_assoc]
+        field_simp [h_nz]
+        have : p₀ = - (r_0 • x) := (neg_eq_of_add_eq_zero_right h_0.symm).symm
+        simp [this, ←smul_assoc, ←neg_smul, ←sub_eq_zero, sub_eq_add_neg]
+        simp only [←add_smul]
+        simp
+        ring_nf
+        tauto
+      exact ⟨ k, this ⟩
+    · intro ⟨ k, h_k ⟩
+      use 0, v
+      exact ⟨ ⟨ 0, by simp ⟩, ⟨ 1, by simp ⟩, ⟨ k, by simp [h_k] ⟩ ⟩
 
 end Point
 
