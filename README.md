@@ -14,10 +14,9 @@ In `lakefile.toml`:
 
 ```toml
 [[require]]
+scope = "misaka10987"
 name = "archimedes"
-git = "https://github.com/misaka10987/example.git"
 rev = "main"
-version = "0.1.0" # replace with actual version
 ```
 
 Use in your code:
