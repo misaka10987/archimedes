@@ -2,6 +2,7 @@
 
 > Don't disturb my circle!
 
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/misaka10987/archimedes)
 ![GitHub License](https://img.shields.io/github/license/misaka10987/archimedes)
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/misaka10987/archimedes/lean_action_ci.yml)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/misaka10987/archimedes)
