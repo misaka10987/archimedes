@@ -196,6 +196,60 @@ theorem zero_parallel_zero (v : Point) : v ∥ 0 ↔ v = 0 := by
   simp
 
 /--
+Linear independence.
+-/
+abbrev lnindep (v w : Point) := LinearIndependent ℝ ![v, w]
+
+/--
+Linear independence is symmetric.
+-/
+theorem lnindep.symm (v w : Point) : lnindep v w → lnindep w v := by
+  simp [lnindep]
+  rw [LinearIndependent.pair_symm_iff]
+  simp
+
+/--
+Linear independence is commutative.
+-/
+theorem lnindep_comm (v w : Point) : lnindep v w ↔ lnindep w v :=
+  ⟨ lnindep.symm v w, lnindep.symm w v ⟩
+
+/--
+Linear dependence.
+-/
+abbrev lndep (v w : Point) := ¬LinearIndependent ℝ ![v, w]
+
+/--
+Linear dependence is reflective.
+-/
+theorem lndep.refl (v : Point) : lndep v v := by
+  simp [not_linearIndependent_iff]
+  use Finset.univ, ![1, -1]
+  simp
+
+/--
+Linear dependence is symmetric.
+-/
+theorem lndep.symm (v w : Point) : lndep v w → lndep w v := by
+  simp [lndep, lnindep_comm]
+
+
+/--
+Linear dependence is commutative.
+-/
+theorem lndep_comm (v w : Point) : lndep v w ↔ lndep w v :=
+  ⟨ lndep.symm v w, lndep.symm w v ⟩
+
+/--
+Parallel vectors are linear dependent.
+-/
+theorem parallel.lndep (v w : Point) : v ∥ w → lndep v w := by
+  simp [parallel, Point.lndep, not_linearIndependent_iff]
+  intro x h _ _
+  use Finset.univ, ![-x, 1]
+  simp [h]
+
+/--
 A vector with all-zero components is a zero vector.
 -/
 @[simp]
