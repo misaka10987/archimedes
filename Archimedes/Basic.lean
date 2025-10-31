@@ -132,6 +132,23 @@ theorem len_dot_unit (v : Point) (nonzero : v ≠ 0) : ‖v‖ = v ∘ v.unit :=
   positivity
 
 /--
+Distance between points.
+-/
+noncomputable abbrev dist (self : Point) (v : Point) : ℝ := Dist.dist self v
+
+/--
+Distance between points.
+-/
+infix:69 "ᵈ" => dist
+
+/--
+Naive definition of the metric function of Euclidean space.
+-/
+theorem metric (v w : Point) : vᵈw = ‖w - v‖ := by
+  rw [←norm_neg]
+  simp [dist, norm, Dist.dist, Real.sqrt_eq_rpow, Fin.sum_univ_three]
+
+/--
 The parallel relation.
 
 Note that the zero vector is defined to be not parallel with any vectors other than the zero vector.
