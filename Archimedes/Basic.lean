@@ -133,9 +133,12 @@ theorem len_dot_unit (v : Point) (nonzero : v ≠ 0) : ‖v‖ = v ∘ v.unit :=
 
 /--
 The parallel relation.
+
+Note that the zero vector is defined to be not parallel with any vectors other than the zero vector.
+This is for parallel to be an equivalence relation.
 -/
-def parallel (self : Point) (v : Point) : Prop :=
-  Collinear ℝ {0, self, v}
+def parallel (v w : Point) : Prop :=
+  ∃ k : ℝ , w = k • v ∧ ∃ k : ℝ , v = k • w
 
 /--
 The parallel relation.
@@ -143,34 +146,45 @@ The parallel relation.
 infix:49 " ∥ " => parallel
 
 /--
-Naive definition for parallel vectors, i.e. one is a multiple of another.
+Parallel relation is reflective.
 -/
-theorem collinear (v w : Point) : v ∥ w ↔ v = 0 ∨ ∃ k : ℝ, w = k • v := by
-  by_cases h : v = 0
-  · exact ⟨ fun _ ↦ Or.inl h, by simp [parallel, h]; apply collinear_pair ⟩
-  · simp [parallel, h, collinear_iff_exists_forall_eq_smul_vadd]
-    constructor
-    · intro ⟨ p₀, x, ⟨ r_0, h_0 ⟩, ⟨ r_v, h_v ⟩, ⟨ r_w, h_w ⟩ ⟩
-      let k := (r_w - r_0) / (r_v - r_0)
-      have : w = k • v := by
-        simp [k, h_v, h_w]
-        have h_nz : r_v - r_0 ≠ 0 := by
-          by_contra
-          have : r_v = r_0 := by linarith
-          rw [this, ←h_0] at h_v
-          contradiction
-        rw [←smul_add, ←smul_right_inj h_nz, smul_smul, ←mul_div_assoc]
-        field_simp [h_nz]
-        have : p₀ = - (r_0 • x) := (neg_eq_of_add_eq_zero_right h_0.symm).symm
-        simp [this, ←smul_assoc, ←neg_smul, ←sub_eq_zero, sub_eq_add_neg]
-        simp only [←add_smul]
-        simp
-        ring_nf
-        tauto
-      exact ⟨ k, this ⟩
-    · intro ⟨ k, h_k ⟩
-      use 0, v
-      exact ⟨ ⟨ 0, by simp ⟩, ⟨ 1, by simp ⟩, ⟨ k, by simp [h_k] ⟩ ⟩
+theorem parallel.refl (v : Point) : v ∥ v := by
+  simp [parallel]
+  use 1
+  simp
+
+/--
+Parallel relation is symmetric.
+-/
+theorem parallel.symm (v w : Point) : v ∥ w → w ∥ v := by
+  simp [parallel]
+  intro k_w _ k_v _
+  constructor
+  · use k_v
+  · use k_w
+
+/--
+Parallel relation is transitive.
+-/
+theorem parallel.trans (v w u : Point) : v ∥ w → w ∥ u → v ∥ u := by
+  simp [parallel]
+  intro k_wv h_wv k_vw h_vw k_uw h_uw k_wu h_wu
+  constructor
+  · use k_uw • k_wv
+    simp [h_uw, h_wv, mul_smul]
+  · use k_vw • k_wu
+    simp [h_vw, h_wu, mul_smul]
+
+instance parallel_eq : Equivalence parallel where
+  refl := parallel.refl
+  symm := @parallel.symm
+  trans := @parallel.trans
+
+/--
+Parallel relation is commutive.
+-/
+theorem parallel_comm (v w : Point) : v ∥ w ↔ w ∥ v :=
+  ⟨ parallel.symm v w, parallel.symm w v ⟩
 
 end Point
 
