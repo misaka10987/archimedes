@@ -203,7 +203,7 @@ instance parallel_eq : Equivalence parallel where
   trans := @parallel.trans
 
 /--
-Parallel relation is commutive.
+Parallel relation is commutative.
 -/
 theorem parallel_comm (v w : Point) : v ∥ w ↔ w ∥ v :=
   ⟨ parallel.symm v w, parallel.symm w v ⟩
