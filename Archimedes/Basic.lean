@@ -187,6 +187,15 @@ theorem parallel_comm (v w : Point) : v ∥ w ↔ w ∥ v :=
   ⟨ parallel.symm v w, parallel.symm w v ⟩
 
 /--
+The zero vector is the only one parallel to zero vector.
+-/
+theorem zero_parallel_zero (v : Point) : v ∥ 0 ↔ v = 0 := by
+  simp [parallel]
+  intro
+  use 0
+  simp
+
+/--
 A vector with all-zero components is a zero vector.
 -/
 @[simp]
