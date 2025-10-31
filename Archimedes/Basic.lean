@@ -271,6 +271,28 @@ theorem parallel.lndep (v w : Point) : v ∥ w → lndep v w := by
   simp [h]
 
 /--
+The perpendicularity.
+-/
+def perp (v w : Point) : Prop := v ∘ w = 0
+
+/--
+The perpendicularity.
+-/
+infix:49 " ⟂ " => perp
+
+/--
+Perpendicularity is symmetric.
+-/
+theorem perp.symm (v w : Point) : v ⟂ w → w ⟂ v := by
+  simp [perp, real_inner_comm]
+
+/--
+Perpendicularity is commutative.
+-/
+theorem perp_comm (v w : Point) : v ⟂ w ↔ w ⟂ v :=
+  ⟨ perp.symm v w, perp.symm w v ⟩
+
+/--
 A vector with all-zero components is a zero vector.
 -/
 @[simp]
