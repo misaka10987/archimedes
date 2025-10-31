@@ -146,6 +146,11 @@ The parallel relation.
 infix:49 " ∥ " => parallel
 
 /--
+The non-parallel relation.
+-/
+infix:49 " ∦ " => ¬parallel
+
+/--
 Parallel relation is reflective.
 -/
 theorem parallel.refl (v : Point) : v ∥ v := by
