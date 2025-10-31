@@ -233,7 +233,6 @@ Linear dependence is symmetric.
 theorem lndep.symm (v w : Point) : lndep v w → lndep w v := by
   simp [lndep, lnindep_comm]
 
-
 /--
 Linear dependence is commutative.
 -/
@@ -256,20 +255,5 @@ A vector with all-zero components is a zero vector.
 lemma zero_components : ![0, 0, 0] = 0 := by simp
 
 end Point
-
-/--
-The unit vector on $x$ axis.
--/
-abbrev x : Point := ![1, 0, 0]
-
-/--
-The unit vector on $y$ axis.
--/
-abbrev y : Point := ![0, 1, 0]
-
-/--
-The unit vector on $z$ axis.
--/
-abbrev z : Point := ![0, 0, 1]
 
 end A
