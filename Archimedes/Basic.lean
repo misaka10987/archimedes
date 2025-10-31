@@ -155,7 +155,7 @@ Note that the zero vector is defined to be not parallel with any vectors other t
 This is for parallel to be an equivalence relation.
 -/
 def parallel (v w : Point) : Prop :=
-  ∃ k : ℝ , w = k • v ∧ ∃ k : ℝ , v = k • w
+  (∃ k : ℝ , w = k • v) ∧ (∃ k : ℝ , v = k • w)
 
 /--
 The parallel relation.
