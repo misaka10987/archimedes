@@ -186,13 +186,13 @@ Parallel relation is commutive.
 theorem parallel_comm (v w : Point) : v ∥ w ↔ w ∥ v :=
   ⟨ parallel.symm v w, parallel.symm w v ⟩
 
-end Point
-
 /--
 A vector with all-zero components is a zero vector.
 -/
 @[simp]
 lemma zero_components : ![0, 0, 0] = 0 := by simp
+
+end Point
 
 /--
 The unit vector on $x$ axis.
