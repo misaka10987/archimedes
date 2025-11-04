@@ -32,6 +32,27 @@ The z-component of the vector, defined as `self 2` .
 abbrev z (self : Point) : ℝ := self 2
 
 /--
+A non-zero vector.
+-/
+abbrev NonZero := { p : Point // p ≠ 0 }
+
+namespace NonZero
+
+instance : Neg NonZero where
+  neg v := ⟨ -v.val, by simp [v.prop] ⟩
+
+@[simp]
+lemma neg_val (v : NonZero) : (-v).val = -v.val := by
+  simp [Neg.neg]
+
+end NonZero
+
+/--
+Introduce a non-zero vector with the provided proof.
+-/
+def non_zero (self : Point) (h : self ≠ 0) : NonZero := ⟨ self, h ⟩
+
+/--
 The dot product.
 -/
 @[simp]
@@ -297,6 +318,91 @@ A vector with all-zero components is a zero vector.
 -/
 @[simp]
 lemma zero_components : ![0, 0, 0] = 0 := by simp
+
+/--
+The one to be asymmmetrically chosen from a pair of opposite vectors.
+
+See `NonZero.asymm_choose` for specifications.
+-/
+def asymm_chosen (v : Point) : Prop :=
+  v.x > 0 ∨ v.x = 0 ∧ (v.y > 0 ∨ v.y = 0 ∧ v.z > 0)
+
+/--
+The asymmmetrical choice is decidable.
+-/
+noncomputable instance asymm_chosen_decidable (v : Point) : Decidable v.asymm_chosen := by
+  simp [asymm_chosen]
+  infer_instance
+
+/--
+An asymmetrically chosen vector is never zero.
+-/
+theorem asymm_chosen_non_zero (v : Point) : v.asymm_chosen → v ≠ 0 := by
+  intro h
+  simp [asymm_chosen] at h
+  by_contra this
+  simp [this] at h
+
+/--
+An asymmetrically chosen vector.
+-/
+abbrev AsymmChosen := { p : Point // p.asymm_chosen }
+
+/--
+Exactly one of a vector and its opposite is asymmetrically chosen.
+-/
+theorem NonZero.asymm_chosen_iff_not_opposite (v : NonZero) : v.val.asymm_chosen ↔ ¬(-v).val.asymm_chosen := by
+  simp [asymm_chosen, le_iff_lt_or_eq]
+  by_cases h_x : v.val.x = 0
+  · simp [h_x]
+    by_cases h_y : v.val.y = 0
+    · simp [h_y]
+      intro h_z
+      have : v.val = 0 := by
+        funext this
+        fin_cases this <;> simp [h_x, h_y, h_z]
+      have := v.prop
+      contradiction
+    · simp [h_y]
+      intro this
+      symm at this
+      contradiction
+  · simp [h_x]
+    intro this
+    symm at this
+    contradiction
+
+/--
+Asymmetrically choose one from a non-zero vector and its opposite.
+
+The choice is done under the following algorithm:
+
+- Choose the vector with positive x-component;
+
+- If the x-components are both zero, choose the vector with positive y-component;
+
+- If the y-components are also both zero, choose the vector with positive z-component.
+-/
+noncomputable def NonZero.asymm_choose (v : NonZero) : AsymmChosen :=
+  if h : v.val.asymm_chosen then
+    ⟨ v, h ⟩
+  else by
+    simp [asymm_chosen_iff_not_opposite] at h
+    exact ⟨ -v, h ⟩
+
+/--
+The asymmetrical choice is an even function.
+-/
+theorem NonZero.asymm_choose_even (v : NonZero) : v.asymm_choose = (-v).asymm_choose := by
+  simp [asymm_choose]
+  by_cases v.val.asymm_chosen <;> simp [asymm_chosen_iff_not_opposite]
+
+/--
+The asymmetrical choice either chooses a non-zero vector itself or its opposite.
+-/
+theorem NonZero.asymm_choose_either (v : NonZero) : v.asymm_choose.val = v ∨ v.asymm_choose.val = -v := by
+  simp [asymm_choose]
+  by_cases h : v.val.asymm_chosen <;> simp [h]
 
 end Point
 
